@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{COURSE_TITLE}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- Fontes: escolha o par que combina com a voz do curso. Padrão neutro = Inter.
+       Editorial premium (recomendado p/ tema claro) = Fraunces (display) + Manrope (corpo) + DM Mono.
+       Troque o <link> abaixo e as vars --font-display/body/mono no CSS juntos. -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Editorial: <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Manrope:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"> -->
+  <style>
+/* PASTE THE ENTIRE CONTENTS OF assets/course-theme.css HERE (inline, single-file deliverable). */
+/* The stylesheet defines every component class used below:                                    */
+/*   nav .nav-inner .nav-logo .nav-links | .hero .hero-badge .hero-stats .hero-stat            */
+/*   .container section .section-label .section-intro | .toc .toc-grid .toc-part .toc-item     */
+/*   .part-divider .part-kicker .part-title .part-sub | .callout(.green/.yellow/.red)          */
+/*   .why-box .why-box-label | .platform-grid .platform-card | .filming-card | table           */
+/*   .tag(.tag-green/.tag-yellow/.tag-red/.tag-blue) | .badge-* | footer                       */
+  </style>
+</head>
+<body>
+
+<!-- NAV — links point to the most important section anchors (not all of them). -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">{{BRAND_A}} <span>{{BRAND_B}}</span></div>
+    <ul class="nav-links">
+      <li><a href="#anchor-a">Label A</a></li>
+      <li><a href="#anchor-b">Label B</a></li>
+      <!-- ...one <li> per key section... -->
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO — a tese do curso. Abra com a imagem mais característica do tema.
+     .hero-bg = foto (desktop landscape; a vertical de mobile vem das vars CSS).
+     Se NÃO houver imagem, remova .hero-bg e .hero-scrim: o hero de texto funciona igual. -->
+<header class="hero">
+  <div class="hero-bg" role="img" aria-label="{{HERO_IMG_ALT}}"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-content">
+    <div class="hero-inner">
+      <div class="hero-badge">{{KICKER}}</div>
+      <h1>{{TITLE}} <em>{{TITLE_EMPHASIS}}</em></h1>
+      <p>{{SUBTITLE_ONE_SENTENCE_PROMISE}}</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num">{{NUM}}</div><div class="hero-stat-label">{{LABEL}}</div></div>
+        <!-- 3–4 concrete, honest stats. Numbers must trace to research-log.md. -->
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- TABLE OF CONTENTS — grouped by Part. One .toc-part header per Part, then .toc-item links. -->
+<div class="container">
+  <div class="toc">
+    <h3>Sumário</h3>
+    <div class="toc-grid">
+      <div class="toc-part">Parte 1 · {{PART_TITLE}}</div>
+      <a href="#anchor-01" class="toc-item"><span class="toc-num">01</span> {{Section title}}</a>
+      <a href="#anchor-02" class="toc-item"><span class="toc-num">02</span> {{Section title}}</a>
+      <div class="toc-part">Parte 2 · {{PART_TITLE}}</div>
+      <a href="#anchor-03" class="toc-item"><span class="toc-num">03</span> {{Section title}}</a>
+      <!-- ...every section, in DOM order, numbers zero-padded... -->
+    </div>
+  </div>
+</div>
+
+<!-- ============ PART DIVIDER (one before each Part's first section) ============ -->
+<div class="container">
+  <div class="part-divider">
+    <span class="part-kicker">Parte 1</span>
+    <h2 class="part-title">{{PART_TITLE}}</h2>
+    <p class="part-sub">{{One line describing what this Part covers.}}</p>
+  </div>
+</div>
+
+<!-- ============ SECTION (repeat; id == anchor used in TOC/nav) ============ -->
+<section id="anchor-01">
+  <div class="container">
+    <div class="section-label">Seção 01</div>
+    <h2>{{Section heading}}</h2>
+    <p class="section-intro">{{One-paragraph framing: what and why it matters.}}</p>
+
+    <!-- CALLOUT — honest highlight. Variants: (default=accent), .green (win), .yellow (caution), .red (legal/risk). -->
+    <div class="callout green"><strong>O insight central:</strong> {{...}}</div>
+
+    <!-- WHY-BOX — the signature component. EVERY instructional step/rule gets the reason behind it.
+         The learner understands, does not memorize. Essential for later narrating the course as video. -->
+    <div class="why-box">
+      <div class="why-box-label">Por que {{...}}</div>
+      <p>{{The reasoning: the cause behind the rule, not just the procedure.}} <strong>Regra:</strong> {{...}}</p>
+    </div>
+
+    <!-- CARD GRID — use FIXED columns matching item count: repeat(N,1fr). Never auto-fill (orphan rows). -->
+    <div class="platform-grid">
+      <div class="platform-card">
+        <div class="platform-header">
+          <div class="platform-logo" style="background:var(--accent-soft);color:var(--accent);">1</div>
+          <div class="platform-info"><h3>{{Card title}}</h3><div class="platform-freq">{{one-line qualifier}}</div></div>
+        </div>
+        <p class="platform-desc">{{...}}</p>
+        <ul class="platform-tips"><li>{{tip}}</li><li>{{tip}}</li></ul>
+      </div>
+      <!-- ...repeat cards... -->
+    </div>
+
+    <!-- COMPARISON TABLE — always include a pt-BR/language column, price, honest pros/cons if relevant. -->
+    <table>
+      <thead><tr><th>{{Col}}</th><th>{{Col}}</th></tr></thead>
+      <tbody><tr><td>{{...}}</td><td>{{...}}</td></tr></tbody>
+    </table>
+
+    <!-- OPTIONAL FIGURE — only if a generated illustration exists in assets/img/. Always <figcaption>. -->
+    <figure style="margin:8px 0 28px;">
+      <img src="assets/img/{{name}}.jpg" alt="{{descriptive alt}}" loading="lazy"
+           style="width:100%;border-radius:var(--radius);border:1px solid var(--border);display:block;">
+      <figcaption style="font-size:13px;color:var(--text-muted);text-align:center;">{{caption}}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ...more sections... -->
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>{{Closing line: author, date, honesty note (prices/tools change; verify official sites).}}</p>
+  </div>
+</footer>
+
+</body>
+</html>

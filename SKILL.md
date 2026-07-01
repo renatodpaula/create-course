@@ -227,6 +227,11 @@ Depois de escrever, releia o curso inteiro caçando o que destrói confiança:
   outro lugar e caixas que só documentam uma pergunta pontual.
 - **Confusões previsíveis do leitor** — onde dois conceitos se parecem (ex.:
   temperatura do forno vs interna), adicione um callout curto que os separa.
+- **Voz impessoal/didática** — o curso é COMPARTILHADO com terceiros, não é uma
+  resposta ao usuário da conversa. Nunca escreva "você lembrou certo", "como você
+  perguntou", "no seu caso". O "você" instrucional genérico ("você alimenta o
+  starter") é ok; referência à conversa/memória do usuário, não. Se um achado veio
+  de uma pergunta do usuário, ensine o conceito — não documente o diálogo.
 Um subagente cético ("liste toda contradição e todo número sem fonte") acha o que
 você não vê relendo o próprio texto.
 

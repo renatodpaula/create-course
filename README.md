@@ -1,32 +1,37 @@
 # create-course
 
-Skill do Claude Code que **cria um curso completo do zero** e entrega um HTML
-único e navegável — do jeito que o curso "Clone Digital" foi produzido.
+*[Ler em português](README.pt-BR.md)*
 
-**Fluxo:** entrevista (`AskUserQuestion`) → pesquisa profunda com agentes
-paralelos (WebSearch/firecrawl + `/watch` para vídeos) → PRDs vivos (PRD,
-estrutura, matriz de referências, log de pesquisa) → `curso.html` (CSS inline,
-tema **escuro ou claro**, **hero com foto de abertura**, componente-assinatura
-`.why-box`) → passada de consistência → sanity checks + render real → publicar
-opcional (Cloudflare Pages).
+A Claude Code skill that **builds a complete course from scratch** and delivers
+a single, navigable HTML file — the same way the "Clone Digital" course was
+produced.
 
-**Princípios:** explicar o porquê; honestidade (custos/limites/legal reais);
-organizar por caminhos, não por ferramentas; documentos vivos; rigor de fonte;
-enxuto (sem padding nem números-espantalho); coerência interna (sem contradições).
+**Flow:** interview (`AskUserQuestion`) → deep research with parallel agents
+(WebSearch/firecrawl + the `/watch` skill for videos) → living PRDs (PRD,
+structure, reference matrix, research log) → `curso.html` (inline CSS,
+**dark or light** theme, **hero opening photo**, signature `.why-box`
+component) → consistency pass → sanity checks + real render → optional
+publishing (Cloudflare Pages).
 
-## Instalar
-Link/copie para onde o Claude Code lê skills, ex.:
+**Principles:** explain the "why"; honesty (real costs/limits/legal notes);
+organize by paths, not tools; living documents; source rigor; lean (no padding
+or scarecrow numbers); internal consistency (no contradictions).
+
+## Install
+Symlink or copy it into wherever Claude Code reads skills from, e.g.:
 ```
 ln -s ~/Projetos/skills/create-course ~/.claude/skills/create-course
 ```
-Depois invoque com `/create-course` ou peça "criar um curso sobre X".
+Then invoke with `/create-course` or ask to "create a course about X".
 
-## Arquivos
-- `SKILL.md` — o guia (entrevista → pesquisa → PRDs → HTML/ilustrações/consistência → verificar → publicar).
-- `assets/course-theme.css` — tema completo (colar no `<style>`); presets escuro/claro, fontes e hero como variáveis.
-- `assets/html-template.html` — esqueleto + componentes documentados (hero full-bleed com foto).
-- `assets/build_helpers.py` — renumeração, correção segura de acentos, checks (`--check`, `--assets`, `--anchors`, `--renumber`).
-- `templates/*.md` — os quatro PRDs.
+## Files
+- `SKILL.md` — the guide (interview → research → PRDs → HTML/illustrations/consistency → verify → publish).
+- `assets/course-theme.css` — the full theme (paste into `<style>`); dark/light presets, fonts and hero as variables.
+- `assets/html-template.html` — skeleton + documented components (full-bleed hero with photo).
+- `assets/build_helpers.py` — renumbering, safe accent fixes, checks (`--check`, `--assets`, `--anchors`, `--renumber`).
+- `templates/*.md` — the four PRDs.
 
-## Autor
+Full documentation: [this repo's wiki](https://github.com/renatodpaula/create-course/wiki).
+
+## Author
 Renato dPaula — [@renatodpaula.ai](https://renatodpaula.ai)

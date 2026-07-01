@@ -76,7 +76,12 @@ de `AskUserQuestion` (agrupe; não faça uma pergunta por vez). O que precisa sa
   Se o usuário citar um site de referência, extraia a paleta/fontes dele (firecrawl
   `scrape --format rawHtml` → grep de `--var`/hex/`font-family`).
 - **Foto de abertura (hero)** — o curso vai ter uma imagem grande de abertura?
-  (recomendado; é a tese visual). Se sim, o estilo dela DERIVA do tema (Fase 4b).
+  (recomendado; é a tese visual). Se sim, o estilo dela DERIVA do tema e pergunte
+  **qual gerador de imagem usar** — API OpenAI, API Google Gemini, API
+  OpenRouter, API Higgsfield, MCP Higgsfield, MCP de geração de imagem já
+  conectado (ex.: Magnific/Freepik), ou "decida você" (use o que estiver
+  disponível no ambiente). Ver Fase 4b — esta skill é pública, não assuma que
+  todo mundo tem o mesmo provedor configurado.
 - **Publicação** — fica só como arquivo local ou vai pro ar? Se web: domínio
   desejado (Cloudflare Pages — Fase 6).
 
@@ -188,9 +193,25 @@ O template documenta cada componente:
 
 ### Fase 4b — Ilustrações (opcional, mas o hero vale muito)
 
-Gerar via MCP do Magnific (`images_generate` → `creations_wait` → baixar a `url`)
-ou OpenRouter (`google/gemini-2.5-flash-image`). Sempre **16:9** para figuras,
-**sem texto renderizado** (modelos erram letras — legenda vai no `<figcaption>`).
+**Gerador de imagem é escolha do usuário (Fase 1) — esta skill não assume um só
+provedor.** Cada ambiente tem chaves/MCPs diferentes; descubra o que está
+disponível (`ToolSearch`/MCPs conectados) e confirme com o usuário antes de
+gastar créditos. Opções comuns e como acioná-las:
+
+| Provedor | Como chamar |
+|---|---|
+| **API OpenAI** | `images.generate` (modelo `gpt-image-1`), prompt + `size`; resposta em base64 ou URL. |
+| **API Google Gemini** | `generateContent` com modelo de imagem (ex.: `gemini-2.5-flash-image` "nano banana" ou Imagen); prompt em texto. |
+| **API OpenRouter** | proxy de chat completions apontando pra um modelo de imagem (ex.: `google/gemini-2.5-flash-image`); mesma chamada de texto, resposta traz a imagem. |
+| **API Higgsfield** | endpoint de geração da Higgsfield (Soul e afins); consulte a doc da conta do usuário para modelo/parâmetros exatos. |
+| **MCP Higgsfield** | tools do MCP da Higgsfield, se conectado — geração + polling conforme o server expuser. |
+| **MCP de terceiros já conectado** (ex.: Magnific/Freepik) | fluxo típico `images_generate` → `creations_wait` (polling até ficar pronto) → baixar a `url`. |
+
+Se nenhum provedor estiver disponível, **não trave**: avise o usuário e siga sem
+hero/ilustrações (hero de texto — remova `.hero-bg`/`.hero-scrim` no template).
+
+Independente do provedor: sempre **16:9** para figuras, **sem texto renderizado**
+(modelos erram letras — legenda vai no `<figcaption>`).
 
 **O estilo DERIVA do tema — nunca hardcode "escuro".** Monte um "estilo-base" que
 casa com a paleta e cole no fim de cada prompt. É o erro nº 1: gerar imagens de
@@ -209,10 +230,11 @@ fundo escuro e depois o curso virar tema claro → tudo destoa. Exemplos:
   fica horrível; por isso a vertical dedicada.) Gere 2-3 variantes de cada e
   ESCOLHA vendo (Read no arquivo, não confie no prompt).
 
-**Fluxo:** gerar em paralelo (uma mensagem, vários `images_generate`) →
-`creations_wait` → baixar → **otimizar** (`sips -Z 1600 -s formatOptions 82`, ou
-~2200px p/ o hero) → conferir **< ~300 KB** por imagem → salvar em `assets/img/` →
-embutir em `<figure>` (ou nas vars do hero). Rode `build_helpers.py --assets`.
+**Fluxo:** gerar em paralelo (uma mensagem, várias chamadas ao provedor
+escolhido) → esperar/baixar (poll se o provedor for assíncrono) → **otimizar**
+(`sips -Z 1600 -s formatOptions 82`, ou ~2200px p/ o hero) → conferir
+**< ~300 KB** por imagem → salvar em `assets/img/` → embutir em `<figure>` (ou
+nas vars do hero). Rode `build_helpers.py --assets`.
 
 ### Fase 4c — Passada de consistência (crítica, não pule)
 

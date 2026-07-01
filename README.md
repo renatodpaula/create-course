@@ -27,3 +27,6 @@ Depois invoque com `/create-course` ou peça "criar um curso sobre X".
 - `assets/html-template.html` — esqueleto + componentes documentados (hero full-bleed com foto).
 - `assets/build_helpers.py` — renumeração, correção segura de acentos, checks (`--check`, `--assets`, `--anchors`, `--renumber`).
 - `templates/*.md` — os quatro PRDs.
+
+## Autor
+Renato dPaula — [@renatodpaula.ai](https://renatodpaula.ai)

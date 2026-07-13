@@ -21,6 +21,11 @@ Uso:
     python build_helpers.py --anchors curso.html
         Lista âncoras (id de <section>) e verifica que toda href #... existe.
 
+    python build_helpers.py --outline curso.html
+        Imprime o mapa real do HTML (Partes → seções: número, título, #âncora).
+        Use no fechamento de rodada para diff contra course-structure.md — se
+        divergir, o structure doc está mentindo e precisa ser reconciliado.
+
 Correção de acentos em massa: use `fix_accents_in_text()` importando este módulo,
 passando um dicionário {errado: certo}. Ele SÓ altera texto entre tags.
 """
@@ -110,6 +115,9 @@ def check(html, base_dir=None):
     if missing:
         problems.append(f"href sem <section id> correspondente: {missing}")
 
+    # refs cruzadas provadamente quebradas (case-insensitive)
+    problems += crossref_check(html)
+
     # imagens referenciadas existem?
     if base_dir is not None:
         asset_problems = assets_check(html, base_dir)
@@ -133,6 +141,46 @@ def anchors(html):
         print(f"  {i:02d}  #{a}")
 
 
+def strip_tags(fragment):
+    return re.sub(r'<[^>]+>', '', fragment).strip()
+
+
+def outline(html):
+    """Mapa real do HTML: Partes e seções na ordem do DOM, com nº, título e âncora.
+    Saída pensada para diff manual contra course-structure.md."""
+    # tokens: part-title OU section (id + label + h2), na ordem do documento
+    pattern = re.compile(
+        r'class="part-title"[^>]*>(?P<part>.*?)</'
+        r'|<section id="(?P<id>[^"]+)"(?P<body>.*?)</section>',
+        re.S)
+    n_parts = 0
+    for m in pattern.finditer(html):
+        if m.group('part') is not None:
+            n_parts += 1
+            print(f"\nPARTE {n_parts} — {strip_tags(m.group('part'))}")
+        else:
+            body = m.group('body')
+            label = re.search(r'class="section-label"[^>]*>(.*?)</div>', body, re.S)
+            h2 = re.search(r'<h2[^>]*>(.*?)</h2>', body, re.S)
+            print(f"  {strip_tags(label.group(1)) if label else '??'} — "
+                  f"{strip_tags(h2.group(1)) if h2 else '??'}  (#{m.group('id')})")
+
+
+def crossref_check(html):
+    """Refs cruzadas 'Seção NN' (case-insensitive): flagra número acima do total
+    de seções (ref quebrada na certa) e lista todas para verificação amostral."""
+    n_sections = len(re.findall(r'<section id="', html))
+    problems = []
+    for m in re.finditer(r'[Ss]e[çc][ãa]o\s+(\d{1,3})', html):
+        n = int(m.group(1))
+        # refs <= n_sections ainda podem apontar pro alvo errado (verifique por
+        # amostragem); número acima do total é provadamente quebrado
+        if n > n_sections:
+            ctx = strip_tags(html[max(0, m.start() - 60):m.end() + 60]).replace('\n', ' ')
+            problems.append(f"ref 'Seção {n}' > total de seções ({n_sections}): …{ctx}…")
+    return problems
+
+
 def main():
     if len(sys.argv) < 3:
         print(__doc__)
@@ -151,6 +199,9 @@ def main():
         return 1 if problems else 0
     if mode == '--anchors':
         anchors(html)
+        return 0
+    if mode == '--outline':
+        outline(html)
         return 0
     if mode == '--renumber':
         new_html, n = renumber_section_labels(html)

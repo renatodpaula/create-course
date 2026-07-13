@@ -11,6 +11,8 @@
 
 ## 1. Visão geral
 
+**TESE DO CURSO (1 linha):** {{a linha editorial inegociável — ex.: "pão de fermento natural, sem ovos". Todo conteúdo novo é checado contra ela; o que contradiz entra com callout de desvio ou rótulo de bônus, nunca em silêncio.}}
+
 {{Parágrafo: o que o curso ensina, para quem, e qual transformação promete. Uma frase-promessa clara.}}
 
 **Entregável:** `{{slug}}.html` — arquivo único, canônico nesta pasta.
@@ -67,7 +69,9 @@ Matriz completa em `reference-matrix.md`. Resumo por categoria:
 
 - **Grids:** colunas fixas (`repeat(N,1fr)`) que batam com a contagem de itens. `auto-fill + minmax` gera linhas órfãs.
 - **Acentuação:** correções em massa via script Python que só altera texto entre tags (`re.split(r'(<[^>]+>)')`) — nunca tocar em nomes de classe/atributos.
-- **Renumeração de seções:** ao inserir no meio, renumerar todos os `section-label` por ordem do DOM, reescrever TOC + nav, atualizar refs cruzadas "Seção N". Verificar: `<section>` abre==fecha, TOC==nº seções, âncoras únicas.
+- **Renumeração de seções:** ao inserir no meio, renumerar todos os `section-label` por ordem do DOM, reescrever TOC + nav, atualizar refs cruzadas "Seção N" (case-insensitive — "seção" minúsculo também). Verificar: `<section>` abre==fecha, TOC==nº seções, âncoras únicas.
+- **Refs cruzadas por âncora:** `<a href="#anchor">` em vez de número solto — número hardcoded quebra a cada renumeração.
+- **Fechamento de rodada:** rodada só fecha com `build_helpers.py --check` + `--outline` batendo com `course-structure.md` e este PRD atualizado (ver checklist na SKILL.md).
 
 ---
 

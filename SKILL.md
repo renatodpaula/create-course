@@ -5,10 +5,16 @@ description: >-
   público, faz pesquisa profunda na internet com múltiplos agentes paralelos
   (WebSearch/firecrawl + skill /watch para vídeos), documenta tudo em PRDs
   estruturados (PRD, estrutura, matriz de referências, log de pesquisa) e entrega
-  um arquivo HTML único, escuro e navegável, com todo o curso. Use quando o
+  um arquivo HTML único, escuro e navegável, com todo o curso. TAMBÉM cuida de
+  cursos já criados: qualquer alteração, expansão, correção ou nova aula/vídeo
+  incorporado a um curso existente deve passar por esta skill (fluxo "Expansão
+  contínua" — rodada no research-log, guardião da tese, renumeração segura,
+  checklist de fechamento que mantém os PRDs sincronizados). Use quando o
   usuário quiser "criar um curso", "montar um tutorial/guia completo", "produzir
-  material didático sobre X", "transformar uma pesquisa em curso", ou invocar
-  /create-course. Nasceu do processo que criou o curso "Clone Digital".
+  material didático sobre X", "transformar uma pesquisa em curso", "adicionar/
+  mudar/corrigir algo num curso existente", "incorporar um vídeo/aula ao curso",
+  "revisar/reorganizar o curso", ou invocar /create-course. Nasceu do processo
+  que criou o curso "Clone Digital".
 ---
 
 # Create Course
@@ -49,11 +55,24 @@ de PRD que são o cérebro vivo do curso. Opcionalmente publicado na web
    uma regra absoluta que ele mesmo desmente depois (ex.: "a massa é sempre mole,
    não dá pra moldar" numa seção e "modele a bola" em outra). Regras têm nuance;
    contradições confundem e destroem a confiança. Ver a passada de consistência (Fase 4c).
+9. **Guardião da tese.** Todo curso declara sua TESE em 1 linha no topo do `PRD.md`
+   (ex.: "pão de fermento natural, sem ovos"; "use as ferramentas que você já paga").
+   Todo conteúdo novo — na criação E em cada expansão — é checado contra ela:
+   *isso contradiz a tese?* Se contradiz e mesmo assim vale entrar, entra com um
+   callout de desvio explícito ("esta receita usa fermento biológico — foge da linha
+   do curso porque...") ou rotulado como bônus fora da linha. Nunca em silêncio.
+   É o erro nº 1 da expansão incremental: conteúdo de vídeo/fonte nova colado sem
+   reconciliar com a espinha do curso.
+10. **PRDs nunca mentem.** Uma rodada (criação ou expansão) só está FECHADA quando
+   `PRD.md`, `course-structure.md` e o mapa de renumeração refletem o HTML real.
+   Documento de planejamento desatualizado é pior que nenhum: a próxima expansão
+   lê o mapa errado e duplica/desalinha conteúdo. Ver "Checklist de fechamento de
+   rodada" no fim deste guia.
 
 ## Fluxo (fases)
 
-Entrevista → Pesquisa → PRDs → HTML (4) + Ilustrações (4b) + Consistência (4c) →
-Verificar/render (5) → Publicar (6, opcional).
+Entrevista → Pesquisa (2) + Curadoria de vídeo (2b) → PRDs → HTML (4) +
+Ilustrações (4b) + Consistência (4c) → Verificar/render (5) → Publicar (6, opcional).
 
 ### Fase 1 — Entrevista (SEMPRE primeiro; use `AskUserQuestion`)
 
@@ -69,6 +88,18 @@ de `AskUserQuestion` (agrupe; não faça uma pergunta por vez). O que precisa sa
   documento vivo para expansão contínua.
 - **Fontes especiais** — há vídeos (YouTube) para analisar via `/watch`? Sites,
   PDFs, docs proprietários, contas/assinaturas que o usuário já tem?
+- **Profundidade da pesquisa em vídeo** (`AskUserQuestion` com 3 opções — mais
+  vídeo assistido = curso melhor, mas mais tokens e tempo; a escolha é do usuário):
+  | Nível | Varredura | Transcrições lidas | `/watch` completo | Comentários | Idiomas |
+  |---|---|---|---|---|---|
+  | **Rápido** | ~15-20 vídeos | ~5 | 1-2 (só onde o visual importa) | top ~20 dos assistidos | idioma-alvo + EN |
+  | **Equilibrado** (default) | ~40-60 | ~10-15 | 3-5 | top ~50 por vídeo lido | idioma-alvo + EN |
+  | **Profundo** | ~100+ | ~25-40 | 8-15 | top ~100 por vídeo lido | idioma-alvo + EN + ES (+ outros se o tema tiver comunidade forte neles) |
+  A distinção-chave: **ler transcrição é barato** (texto puro, sem baixar vídeo);
+  `/watch` completo (frames + transcript) é caro — reserve para vídeos onde a TELA
+  ensina (técnica manual, UI de ferramenta, demonstração). Um curso não se
+  constrói com 3 vídeos: constrói-se lendo dezenas de transcrições e assistindo
+  de verdade só os que a triagem apontar como densos.
 - **Marca/visual** — nome/título, **cor de acento** (default roxo `#6366f1`;
   ofereça a paleta pronta da Fase 4 ou aceite um hex), **tema** (escuro padrão ou
   claro "editorial creme"), **par tipográfico** (neutro Inter, ou editorial
@@ -98,8 +129,9 @@ Este é o motor. Faça pesquisa larga e verificada, não um resumo de memória.
   oficiais). Ângulos típicos: panorama do tema, ferramentas/players, preços e
   tiers, comparativos, casos reais/números, comunidade (Reddit/fóruns), armadilhas
   e limitações, aspectos legais/éticos.
-- **Vídeos:** se o usuário indicou vídeos, use a skill **`/watch`** (passe a URL)
-  para "assistir" — extrai frames + transcript e permite destilar fala + tela.
+- **Vídeos:** se o usuário indicou vídeos específicos, use a skill **`/watch`**
+  (passe a URL) para "assistir" — extrai frames + transcript e permite destilar
+  fala + tela. Para DESCOBRIR vídeos que o usuário não indicou, rode a Fase 2b.
 - **Verifique afirmações** antes de escrever: preço, recurso, estatística, status
   (vivo/morto). Prefira múltiplas fontes. Para review comprovadamente cético de
   achados importantes, um segundo agente pode tentar refutar.
@@ -107,6 +139,57 @@ Este é o motor. Faça pesquisa larga e verificada, não um resumo de memória.
   com as URLs. É a bibliografia e a trilha de retomada.
 - **Destile o não-óbvio** para o `PRD.md` §6 (Aprendizados-chave): o que um leigo
   não acharia sozinho. Esse é o valor do curso.
+
+### Fase 2b — Curadoria de vídeo no YouTube (automatizada)
+
+**Complementa a Fase 2, não a substitui** — a pesquisa web (fóruns, Reddit,
+blogs, docs oficiais, papers) continua sendo o motor; rode as duas. O YouTube
+entra como fonte adicional porque concentra o conhecimento de praticantes —
+aulas, técnicas, métodos que não estão em texto. Buscar isso na mão não escala
+e deixa passar os melhores.
+Pipeline (escala conforme o nível de profundidade escolhido na Fase 1):
+
+1. **Gerar queries** — 5-10 buscas a partir do tema e das lacunas do
+   `research-log.md`, nos idiomas do nível escolhido (sempre idioma-alvo + EN;
+   ES e outros no nível Profundo). Misture query genérica ("curso X completo"),
+   de técnica ("como fazer Y sem Z") e de problema ("X não funciona / erro").
+2. **Varrer metadados sem baixar nada:**
+   `yt-dlp "ytsearchN:<query>" --flat-playlist -J` → título, canal, duração,
+   views, data. Junte tudo num JSON de candidatos (dedupe por ID).
+3. **Triagem 1 (metadados):** descarte óbvio — Shorts/<4 min, título clickbait
+   sem substância, vídeo velho quando o tema muda rápido. Rankeie por sinal:
+   views × recência × autoridade aparente do canal × aderência ao tema.
+4. **Triagem 2 (transcrição, a etapa que importa):** para os ~top-N do ranking,
+   baixe SÓ as legendas (barato, segundos por vídeo):
+   `yt-dlp --skip-download --write-auto-subs --sub-langs "pt*,en*,es*" --sub-format vtt <URL>`
+   Agentes paralelos leem as transcrições e pontuam cada vídeo (0-10) em:
+   **método concreto** (passo a passo replicável vs conversa), **densidade**
+   (dicas/minuto), **novidade** (o que o curso ainda não tem), **autoridade**
+   (praticante demonstrando vs entusiasta resumindo). Registre a nota + 3 linhas
+   de justificativa no `research-log.md`.
+5. **Comentários — minere-os, valem ouro:** os melhores comentários de um vídeo
+   bom carregam a experiência de OUTROS praticantes — correções ao vídeo,
+   variações testadas, armadilhas ("fiz assim e deu errado porque..."). 99% é
+   ruído; o filtro é o like count da comunidade. Para cada vídeo que passou na
+   triagem 2:
+   `yt-dlp --skip-download --write-comments --extractor-args "youtube:comment_sort=top;max_comments=100,all,0" <URL>`
+   → o `.info.json` traz os comentários com `like_count`/`author`/`text`.
+   Agente filtra: like_count alto + conteúdo técnico (ignora "obrigado!",
+   elogios, pedidos). Achados de comentário entram no `research-log.md` COM
+   marcação de origem ("comentário, não verificado") — são relatos anedóticos:
+   use para gerar hipóteses e callouts de "praticantes relatam...", nunca como
+   fato cravado sem segunda fonte.
+6. **`/watch` completo só nos vencedores** — os vídeos com maior nota onde a
+   TELA ensina algo que a transcrição não captura. Quantidade conforme o nível
+   (1-2 / 3-5 / 8-15).
+7. **Shortlist para o usuário:** apresente a tabela final (vídeo, canal, nota,
+   por quê) antes de gastar os `/watch` — ele pode conhecer os canais e vetar/
+   promover candidatos.
+
+Tudo desta fase entra como rodada no `research-log.md`: queries usadas, nº de
+candidatos varridos, notas da triagem, comentários aproveitados (com link do
+vídeo). Se `yt-dlp` não estiver instalado, avise (`brew install yt-dlp`) — não
+tente scrape manual do YouTube.
 
 ### Fase 3 — Documentar os PRDs (o cérebro vivo)
 
@@ -186,6 +269,16 @@ O template documenta cada componente:
 - **Âncoras únicas**; `id` da seção == href na TOC e no nav.
 - **Numeração** zero-padded (01, 02…), consistente entre `section-label`, TOC e
   ordem do DOM.
+- **Referência cruzada = LINK DE ÂNCORA, nunca só número.** Escreva
+  `<a href="#stacks">Seção de stacks</a>` (ou `... (<a href="#voz">Seção 05</a>)`),
+  não "veja a seção 10" em texto solto. Número hardcoded quebra silenciosamente a
+  cada renumeração (e o remap por regex perde variações como "seção" minúsculo —
+  aconteceu). Âncora não muda quando a numeração muda; o `--check` valida que o
+  alvo existe.
+- **Placeholders em prompts-modelo.** Prompt de exemplo que o aluno vai copiar
+  NUNCA carrega dado pessoal do usuário da conversa (nome da voz treinada, conta,
+  e-mail, domínio). Use `[nome-da-sua-voz]`, `[seu-projeto]`. O curso é
+  compartilhado; dado pessoal hardcoded é vazamento (ver Fase 4c).
 - Para arquivos grandes, edições estruturais (inserir/mover/renumerar seções,
   reconstruir TOC/nav, corrigir acentos em massa) devem usar o helper Python
   `assets/build_helpers.py` — nunca corrigir acento com regex que toque em nomes
@@ -238,7 +331,16 @@ nas vars do hero). Rode `build_helpers.py --assets`.
 
 ### Fase 4c — Passada de consistência (crítica, não pule)
 
-Depois de escrever, releia o curso inteiro caçando o que destrói confiança:
+Roda na criação E periodicamente: **a cada ~3 rodadas de expansão, uma rodada de
+consolidação** dedicada só a isto (a degradação não aparece na criação — acumula
+nas costuras das expansões). Releia o curso inteiro caçando o que destrói confiança:
+- **Conteúdo que contradiz a TESE do curso** (Princípio 9) — receita/método/
+  recomendação que rompe a linha declarada no PRD sem callout de desvio. Inclui
+  a versão numérica: dois "mínimos", dois "sempre", duas recomendações-padrão
+  incompatíveis entre hero, seção-mapa e seções internas.
+- **Referências-fantasma** — texto que aponta para conteúdo que não existe no
+  curso ("a mesma receita já usada" que nunca foi apresentada). Típico de
+  conteúdo destilado de vídeo: o autor do vídeo referenciava OUTRO vídeo dele.
 - **Contradições entre seções** — uma seção crava o oposto de outra. Reconcilie
   com nuance (ex.: "massa mole" é um extremo do espectro; com mais ligante ela
   modela). Se um vídeo/fonte externa contradiz o consenso, apresente como método
@@ -264,8 +366,10 @@ Rode `assets/build_helpers.py --check curso.html`. Confirme:
 - `<section>` abre == fecha; `<div>` balanceados.
 - âncoras únicas; toda âncora da TOC/nav existe como `id`.
 - toda imagem referenciada (`src`/`url()`) existe em disco (`--check`/`--assets`).
-- nenhuma referência cruzada "Seção NN" quebrada após renumeração.
+- nenhuma referência cruzada "Seção NN" quebrada após renumeração (o check é
+  case-insensitive — "seção 10" minúsculo também conta).
 - acentos corretos (sem ASCII no lugar de acentuado).
+- `--outline` bate com `course-structure.md` (ver checklist de fechamento).
 
 **Render real (não confie só no HTML):** tire screenshots em DESKTOP (1440) e
 MOBILE (390) e OLHE. O hero e os grids quebram diferente por viewport.
@@ -299,16 +403,132 @@ Se o usuário quiser o curso no ar:
    `curl --resolve sub.dominio.com:443:<IP-Cloudflare> https://sub.dominio.com`.
    O cert (Google CA) provisiona em minutos; status via a mesma API de domains.
 
+## Modelos e economia de tokens
+
+A skill não exige um modelo único — o custo/qualidade otimiza escolhendo o
+cérebro por etapa. Princípio: **trabalho de VOLUME → modelo rápido/barato;
+trabalho de JULGAMENTO → o melhor modelo disponível.** O julgamento é pouco
+token e define o curso inteiro; o volume é muito token e é mecânico.
+
+| Etapa | Natureza | Modelo Claude sugerido |
+|---|---|---|
+| Fase 1 — Entrevista/escopo | conversa curta | qualquer um (Sonnet basta) |
+| Fase 2 — agentes de pesquisa web | volume (busca+extração) | Sonnet nos subagentes |
+| Fase 2b — varredura/triagem de transcrições e comentários | volume mecânico, muito token | **Haiku ou Sonnet** nos subagentes |
+| Destilar o não-óbvio, fechar ESTRUTURA, decisões editoriais, tese | julgamento de alto impacto, pouco token | **Opus/Fable** |
+| Fase 4 — escrever o HTML (why-boxes, didática) | volume + qualidade de escrita | Sonnet escreve bem; Opus/Fable se a voz didática for o diferencial |
+| Fase 4c — passada cética / consistência | julgamento (achar contradição exige raciocínio) | **Opus/Fable**, em sessão/subagente separado |
+| Renumeração, checks, correções mecânicas | script (`build_helpers.py`) | nenhum — não gaste modelo com o que o script faz |
+
+No Claude Code: rode o loop principal no melhor modelo do plano e passe
+`model`/subagente mais barato nos fan-outs de volume (o parâmetro de modelo do
+Agent/Workflow). Sonnet dá conta da skill inteira num plano menor; o upgrade
+para Opus/Fable rende mais nas 3 linhas de julgamento da tabela — se for
+escolher UM momento para o modelo forte, escolha a estrutura + a passada cética.
+
+**Portabilidade (a metodologia é agnóstica):** esta skill roda no Claude Code,
+mas o MÉTODO (entrevista → pesquisa → PRDs → artefato → vida) funciona em
+qualquer assistente atual. Equivalências: fan-out de pesquisa ≈ Deep Research
+(ChatGPT/Gemini/Perplexity); PRD persistente ≈ Projects (ChatGPT/Claude) ou
+Gems (Gemini); subagentes baratos ≈ rodar as triagens num modelo mini/flash.
+O que não é portátil são os helpers (`build_helpers.py`) e o fluxo de arquivos —
+num chat puro, o artefato vira um documento Markdown/HTML que o usuário guarda
+e recola a cada rodada.
+
 ## Expansão contínua (chamadas seguintes)
 
-Quando o curso já existe e o usuário pede para expandir: leia os PRDs primeiro
-(evita duplicar), abra uma **rodada nova** no `research-log.md`, pesquise só o
-delta, atualize `reference-matrix.md`/`course-structure.md`, insira/renumere via
-helper, e registre a decisão. O curso avança em versões.
+Quando o curso já existe, TODA mudança passa por aqui — expansão grande, seção
+nova, correção de conteúdo ou "só troca esse parágrafo". É AQUI que os cursos
+degradam — o HTML evolui e os PRDs ficam para trás, a próxima expansão lê o mapa
+errado, e conteúdo novo entra sem reconciliar com a tese. O fluxo:
+
+1. **Leia os PRDs primeiro** (evita duplicar) — e rode
+   `build_helpers.py --outline curso.html` para conferir que `course-structure.md`
+   ainda bate com o HTML real. Se não bate, RECONCILIE ANTES de expandir
+   (alguém editou fora do processo; não construa sobre mapa errado).
+2. **Abra rodada nova** no `research-log.md`, pesquise só o delta (Fase 2/2b).
+3. **Proposta de colocação ANTES de escrever:** registre na rodada onde o
+   conteúdo novo vai entrar (subseção da NN? seção nova na Parte P?) e o
+   impacto (renumeração? nova Parte?). Se durante a integração a decisão mudar
+   (virou seção autônoma, criou Parte nova), ATUALIZE o registro — decisão de
+   estrutura sem trilha é como os cursos apodrecem.
+4. **Cheque contra a tese** (Princípio 9): conteúdo novo contradiz a linha do
+   curso? → callout de desvio explícito ou rótulo de bônus. Nunca em silêncio.
+5. Insira/renumere via helper; refs cruzadas por âncora (não por número).
+6. **Feche a rodada com o checklist abaixo.** A cada ~3 expansões, rode uma
+   rodada de consolidação (Fase 4c completa, com subagente cético).
+
+**Proporcionalidade (para o fluxo não virar burocracia):**
+- **Micro-edição** (typo, acento, frase reescrita sem mudar conteúdo factual):
+  edite direto + rode `--check`. Sem rodada nova — mas se tocar em NÚMERO, preço
+  ou regra, deixa de ser micro.
+- **Mudança de conteúdo** (número, regra, recomendação, callout novo, parágrafo
+  com fato novo): rodada LEVE — 3 linhas no research-log (o que mudou, por quê,
+  fonte) + checagem contra a tese + `--check`. Não precisa re-pesquisar nada.
+- **Expansão** (seção nova, vídeo incorporado, reorganização): fluxo completo
+  1-6 acima + checklist de fechamento.
+Na dúvida, sobe um nível. O barato é registrar; o caro é reconstruir a trilha
+seis meses depois.
+
+### Checklist de fechamento de rodada (criação OU expansão)
+
+Uma rodada só está fechada quando TUDO abaixo é verdade:
+
+- [ ] `build_helpers.py --check curso.html` passa (âncoras, contagens, imagens).
+- [ ] `build_helpers.py --outline curso.html` == `course-structure.md` (Partes,
+      seções, ordem, âncoras). Divergiu → atualizar o structure doc AGORA.
+- [ ] `PRD.md` reflete o estado atual: nº de seções/Partes, numeração citada em
+      qualquer §, e nenhum dado que uma rodada posterior já desmentiu.
+- [ ] Mapa de renumeração do `course-structure.md` registra o remap da rodada
+      (ou declara explicitamente "sem reorganização nesta rodada").
+- [ ] Rodada no `research-log.md` fechada com: o que entrou, ONDE entrou (decisão
+      de colocação final), fontes, e pendências.
+- [ ] Conteúdo novo checado contra a tese (desvios têm callout).
+- [ ] Nenhum número novo sem fonte no log; nenhum dado pessoal em prompt-modelo.
+
+O curso avança em versões — anote a versão/data no PRD a cada rodada fechada.
+
+## Dependências (o que precisa estar instalado)
+
+Esta skill orquestra outras skills e ferramentas. Verifique ANTES de começar
+(e avise o usuário do que falta em vez de travar no meio):
+
+### Skills
+
+| Skill | Para quê | Obrigatória? | Onde encontrar / instalar |
+|---|---|---|---|
+| **`/watch`** | "Assistir" vídeos (frames + transcript) na Fase 2/2b | Sim, se o curso usa vídeos | github.com/bradautomates/claude-video (MIT) — `git clone` para `~/.claude/skills/watch` |
+| **firecrawl** (`firecrawl-search`/`-scrape`) | Busca web com extração de página completa e scrape de fontes oficiais | Não — o WebSearch nativo cobre o essencial | CLI: `brew install firecrawl` (ou npm) + `FIRECRAWL_API_KEY` de firecrawl.dev; skills no marketplace/repo da Firecrawl |
+
+### Ferramentas de linha de comando
+
+| Ferramenta | Para quê | Obrigatória? | Instalar (macOS) |
+|---|---|---|---|
+| **yt-dlp** | Fase 2b inteira (varredura, legendas, comentários) e o download do `/watch` | Sim, para YouTube | `brew install yt-dlp` |
+| **ffmpeg** | Extração de frames do `/watch` | Junto com o /watch | `brew install ffmpeg` |
+| **python3** | `build_helpers.py` (checks, outline, renumeração) | Sim | já vem no macOS |
+| **playwright** (Python) | Screenshots reais da Fase 5 (desktop/mobile) | Recomendada | `pip3 install playwright && playwright install chromium` — fallback: `chrome --headless=new` |
+| **wrangler** | Fase 6 (publicar no Cloudflare Pages) | Só se publicar | `npm i -g wrangler` + `wrangler login` |
+| **sips** | Otimizar imagens (Fase 4b) | Só com ilustrações | nativo no macOS (Linux: ImageMagick `convert`) |
+
+### Nativos do Claude Code (nenhuma instalação)
+
+`WebSearch`, `AskUserQuestion`, subagentes (`Agent`/`Task`) — o fan-out de
+pesquisa da Fase 2 usa só isso se o firecrawl não estiver disponível.
+
+### Degradação graciosa (sem dependência ≠ travar)
+
+- Sem `yt-dlp` → pule a Fase 2b, avise (`brew install yt-dlp`) e siga com a Fase 2.
+- Sem `/watch` → use só legendas/transcrições via yt-dlp (perde a análise de tela).
+- Sem firecrawl → WebSearch nativo.
+- Sem provedor de imagem → hero de texto (Fase 4b).
+- Sem playwright/Chrome → entregue com os checks do helper e avise que o render não foi verificado.
+- Sem wrangler → entregue local e documente a Fase 6 como pendência.
 
 ## Arquivos desta skill
 - `SKILL.md` — este guia.
 - `assets/course-theme.css` — o tema completo (cole no `<style>` do HTML).
 - `assets/html-template.html` — esqueleto + todos os componentes documentados.
-- `assets/build_helpers.py` — renumeração, correção de acentos segura, sanity checks.
+- `assets/build_helpers.py` — renumeração, correção de acentos segura, sanity
+  checks, `--outline` (mapa real do HTML p/ diff contra `course-structure.md`).
 - `templates/PRD.md`, `course-structure.md`, `reference-matrix.md`, `research-log.md`.

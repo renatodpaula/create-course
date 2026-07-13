@@ -16,15 +16,27 @@ Registro de toda a pesquisa feita para construir o curso. Serve de trilha para r
 
 **Ângulos / agentes:** {{lista dos sub-temas buscados em paralelo}}
 **Achados-chave:** {{o que virou conteúdo do curso, com a fonte}}
-**Incorporado em:** {{seções}}
+**Colocação (proposta → decisão final):** {{onde o conteúdo entrou: subseção da NN? seção nova na Parte P? Se a decisão mudou durante a integração, atualize AQUI — decisão de estrutura sem trilha é como o curso apodrece.}}
+**Rodada fechada:** {{sim/não — checklist de fechamento da SKILL.md rodado em DATA}}
 
 ---
+
+## Curadoria de vídeo (Fase 2b)
+
+**Nível escolhido:** {{Rápido / Equilibrado / Profundo}} · **Queries:** {{lista}} · **Candidatos varridos:** {{N}}
+**Triagem (transcrições lidas):** {{tabela: vídeo | canal | nota 0-10 | por quê}}
 
 ## Vídeos analisados via `/watch`
 
 ### `{{VIDEO_ID}}` — {{canal}} ({{tema}})
 - {{achados brutos, dicas, números}}
 - → Incorporado {{Seção NN}}
+
+## Comentários aproveitados
+
+### `{{VIDEO_ID}}` — {{autor do comentário}} ({{likes}} likes)
+- {{o achado — marcar sempre como "relato de praticante, não verificado" até ter segunda fonte}}
+- → {{virou callout "praticantes relatam..." na Seção NN / descartado porque...}}
 
 ---
 

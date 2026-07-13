@@ -50,6 +50,25 @@ ln -s ~/Projetos/skills/create-course ~/.claude/skills/create-course
 
 Depois invoque com `/create-course`, ou peça "criar um curso sobre X".
 
+## Requisitos
+
+A skill orquestra outras skills e CLIs (lista completa, com alternativas e
+degradação graciosa, na seção **Dependências** da `SKILL.md`):
+
+```bash
+brew install yt-dlp ffmpeg              # YouTube (Fase 2b) + /watch
+pip3 install playwright && playwright install chromium   # render check (Fase 5)
+npm i -g wrangler                       # só para publicar (Fase 6)
+```
+
+- **Skill `/watch`** (para analisar vídeos com tela + fala):
+  [bradautomates/claude-video](https://github.com/bradautomates/claude-video) —
+  `git clone` para `~/.claude/skills/watch`.
+- **firecrawl** *(opcional)* — busca/scrape com extração completa
+  (`brew install firecrawl` + `FIRECRAWL_API_KEY`); sem ele, o WebSearch nativo cobre.
+- **Provedor de imagem** *(opcional, para o hero)* — API OpenAI/Gemini/OpenRouter/
+  Higgsfield ou MCP de imagem; sem nenhum, o curso sai com hero de texto.
+
 ## Arquivos
 
 | Caminho | Para quê serve |
